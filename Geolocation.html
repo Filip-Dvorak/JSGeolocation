@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .container{
+            text-align: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div class = "container">
+<h1>Vzdálenost od VŠE</h1>
+
+<button onclick="getLocation()">Spočítat vzdálenost</button>
+
+<p id="vystup"></p>
+</div>
+<script>
+    const x = document.getElementById("vystup");
+
+    function vzdalenostMeziBody(lat1, lon1) {
+        //VŠE souřadnice 50.08424497117326, 14.44122223183677
+        const lat2 = 50.08424497117326;
+        const lon2 = 14.44122223183677;
+        const R = 6371;
+        const dLat = toRadians(lat2 - lat1);
+        const dLon = toRadians(lon2 - lon1);
+
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = R * c;
+
+        return distance;
+    }
+    function toRadians(degrees) {
+        return degrees * (Math.PI / 180);
+    }
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        var vysledek;
+        let vzdalenost = vzdalenostMeziBody(position.coords.latitude, position.coords.longitude);
+        if(vzdalenost>=1)
+        {
+            vysledek = vzdalenost.toPrecision(2) + " km";
+        }
+        else{
+            vysledek = (vzdalenost*1000).toPrecision(1) +" m";
+        }
+        x.innerHTML = "Od VŠE jste vzdušnou čarou: " + vysledek;
+        console.log(vzdalenost);
+        console.log(position.coords.latitude,position.coords.longitude);
+    }
+</script>
+
+</body>
+</html>
