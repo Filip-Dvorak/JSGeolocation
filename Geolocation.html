@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        body{
+        background-color: rgba(220, 218, 218, 0.96);
+        }
         .container{
             text-align: center;
             justify-content: center;
+        }
+        #vystup{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+        }
+        button{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            background-color: rgba(222, 222, 222, 0.96);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
         }
     </style>
 </head>
@@ -13,45 +30,45 @@
 <div class = "container">
 <h1>Vzdálenost od VŠE</h1>
 
-<button onclick="getLocation()">Spočítat vzdálenost</button>
+<button onclick="calculateDistance()">Spočítat vzdálenost</button>
 
 <p id="vystup"></p>
 </div>
 <script>
     const x = document.getElementById("vystup");
 
-    function vzdalenostMeziBody(lat1, lon1) {
+    function distanceBetweenPoints(lat1, lon1) {
         //VŠE souřadnice 50.08424497117326, 14.44122223183677
         const lat2 = 50.08424497117326;
         const lon2 = 14.44122223183677;
         const R = 6371;
-        const dLat = toRadians(lat2 - lat1);
-        const dLon = toRadians(lon2 - lon1);
+        let dLat = toRadians(lat2 - lat1);
+        let dLon = toRadians(lon2 - lon1);
 
-        const a =
+        let a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        const distance = R * c;
+        let distance = R * c;
 
         return distance;
     }
     function toRadians(degrees) {
         return degrees * (Math.PI / 180);
     }
-    function getLocation() {
+    function calculateDistance() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
+            navigator.geolocation.getCurrentPosition(showDistance);
         } else {
             x.innerHTML = "Geolocation is not supported by this browser.";
         }
     }
 
-    function showPosition(position) {
-        var vysledek;
-        let vzdalenost = vzdalenostMeziBody(position.coords.latitude, position.coords.longitude);
+    function showDistance(position) {
+        let vysledek;
+        let vzdalenost = distanceBetweenPoints(position.coords.latitude, position.coords.longitude);
         if(vzdalenost>=1)
         {
             vysledek = vzdalenost.toPrecision(2) + " km";
